@@ -25,10 +25,24 @@ protected:
 
 };
 
+class AlivePos
+{
+public:
+    AlivePos( int posX = 0, int posY = 0 )
+    : posX( posX )
+    , posY( posY )
+    {};
+    ~AlivePos(){};
+
+    int posX;
+    int posY;
+};
+
 class GolBoard
 {
 private:
     std::vector< Cell > board;
+    std::vector< AlivePos > alive;
     unsigned int maxX;
     unsigned int maxY;
 

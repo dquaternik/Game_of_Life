@@ -35,6 +35,8 @@ void GolBoard::readInput()
             {
                 Cell extra(true);
                 board.push_back(extra);
+                AlivePos extraPos( xcount, ycount );
+                alive.push_back( extraPos );
             }
             xcount++;
         }
