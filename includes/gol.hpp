@@ -28,14 +28,16 @@ protected:
 class AlivePos
 {
 public:
-    AlivePos( int posX = 0, int posY = 0 )
+    AlivePos( int posX = 0, int posY = 0, int index = 0 )
     : posX( posX )
     , posY( posY )
+    , index( index )
     {};
     ~AlivePos(){};
 
     int posX;
     int posY;
+    int index;
 };
 
 class GolBoard
@@ -51,5 +53,8 @@ public:
     void updateBoard();
     void updateCells();
     void printOutput();
+
+private:
+    int getIndex( int x, int y );
 
 };

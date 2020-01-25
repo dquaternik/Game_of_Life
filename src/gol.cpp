@@ -4,6 +4,11 @@
 #include <fstream>
 #include <string>
 
+int GolBoard::getIndex( int x, int y )
+{
+    return y*maxX+x;
+}
+
 void GolBoard::readInput()
 {
     // Takes a file in and reads the input into game board
@@ -35,7 +40,7 @@ void GolBoard::readInput()
             {
                 Cell extra(true);
                 board.push_back(extra);
-                AlivePos extraPos( xcount, ycount );
+                AlivePos extraPos( xcount, ycount, getIndex( xcount, ycount ) );
                 alive.push_back( extraPos );
             }
             xcount++;
@@ -51,13 +56,13 @@ void GolBoard::updateBoard()
 {
     Cell *cut;
     int liveCount = 0;
-    int uk, dk, ll, rl;
 
     for(int i = 0; i < maxY; i++ )
     {
         for(int j = 0; j < maxX; j++ )
         {
-            cut = &board[i*maxX+j];
+            int cutIndex = getIndex( j, i );
+            cut = &board[cutIndex];
 
             for( int k = -1; k < 2; k++ )
             {
@@ -73,22 +78,22 @@ void GolBoard::updateBoard()
                     else if( j == maxX-1 && l == 1) truej = 0;
                     else truej = j+l;
 
-                    index = (truei)*maxX+(truej);
+                    index = getIndex( truej, truei );
                     if( board[index].isLive() && cut != &board[index] ) liveCount++;
                 }
             }
 
             if( liveCount == 3 )
             {
-                board[i*maxX+j].nextUpdate( true );
+                board[cutIndex].nextUpdate( true );
             }
             else if( liveCount < 2 || liveCount > 3 )
             {
-                board[i*maxX+j].nextUpdate( false );
+                board[cutIndex].nextUpdate( false );
             }
             else
             {
-                board[i*maxX+j].nextUpdate(board[i*maxX+j].isLive());
+                board[cutIndex].nextUpdate(board[cutIndex].isLive());
             }
             
 
