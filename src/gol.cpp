@@ -67,13 +67,13 @@ void GolBoard::updateBoard()
                     int index, truei, truej; 
                     if( i == 0 && k == -1 ) truei = maxY-1;
                     else if( i == maxY-1 && k == 1) truei = 0;
-                    else truei = i;
+                    else truei = i+k;
 
                     if( j == 0 && l == -1 ) truej = maxX-1;
                     else if( j == maxX-1 && l == 1) truej = 0;
-                    else truej = j;
+                    else truej = j+l;
 
-                    index = (truei+k)*maxX+(truej+l);
+                    index = (truei)*maxX+(truej);
                     if( board[index].isLive() && cut != &board[index] ) liveCount++;
                 }
             }
