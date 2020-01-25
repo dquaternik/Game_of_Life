@@ -4,11 +4,7 @@
 #include <fstream>
 #include <string>
 
-int GolBoard::getIndex( int x, int y )
-{
-    return y*maxX+x;
-}
-
+// Public
 void GolBoard::readInput()
 {
     // Takes a file in and reads the input into game board
@@ -27,6 +23,7 @@ void GolBoard::readInput()
     maxX = 0;
     maxY = 0;
 
+    // Read a line and parse through it
     while( std::getline(inputfile, output) )
     {
         for( auto i = output.begin(); i != output.end(); i++ )
@@ -34,15 +31,15 @@ void GolBoard::readInput()
             if( *i == '.' )
             {
                 Cell extra(false);
-                board.push_back(extra);
-                xcount++;
+                board.push_back(extra); // create dead cell and push to board
+                xcount++; // since the input has spaces, increment x only when a valid character found
             } 
             else if( *i == 'x' )
             {
                 Cell extra(true);
-                board.push_back(extra);
+                board.push_back(extra); // create a live cell and push to board
                 CellPos extraPos( xcount, ycount, getIndex( xcount, ycount ) );
-                alive.push_back( extraPos );
+                alive.push_back( extraPos ); // add live cell location to list of cells to update
                 xcount++;
             }
         }
@@ -51,6 +48,7 @@ void GolBoard::readInput()
         ycount++;
     }
 
+    // once xcount finalized, update the index of the position list
     for( auto it = alive.begin(); it != alive.end(); ++it )
     {
         it->index = getIndex( it->posX, it->posY );
@@ -65,9 +63,10 @@ void GolBoard::updateBoard()
 
 void GolBoard::updateCells()
 {
-    for( auto i = board.begin(); i != board.end(); i++ )
+    // iterate through board and update entirety
+    for( auto it = board.begin(); it != board.end(); it++ )
     {
-        i->update();
+        it->update();
     }
 
     alive.clear();
@@ -78,6 +77,7 @@ void GolBoard::updateCells()
 void GolBoard::printOutput()
 {
     int count = 0;
+    // iterate through the board and print to console
     for( auto i = board.begin(); i != board.end(); i++ )
     {
         if( i->live ) std::cout << "x ";
@@ -94,6 +94,15 @@ void GolBoard::printOutput()
 
 }
 
+// Private
+int GolBoard::getIndex( int x, int y )
+{
+    // find index based on maxX
+    return y*maxX+x;
+}
+
+// Searches through list of alive cells, checking the dead neighbors along the way to see if they will
+// come to life. Only will check each cell once
 void GolBoard::checkNeighbors( std::vector< CellPos > pos, bool enable )
 {
     Cell *cut;
