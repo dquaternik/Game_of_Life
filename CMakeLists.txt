@@ -15,9 +15,14 @@ include_directories(includes)
 
 #GLOB
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB INPUT "input/*.txt")
 
 # add the executable
 add_executable(GameOfLife ${SOURCES})
 
 #add file to configure version
 #configure_file(GolConfig.h.in GolConfig.h)
+
+#add input file
+configure_file(${INPUT}
+               ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
