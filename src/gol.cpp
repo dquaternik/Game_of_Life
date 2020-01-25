@@ -1,11 +1,42 @@
-#include "StdBoardBits.hpp"
 #include "gol.hpp"
+
+#include "cells.hpp"
+#include "StdBoardBits.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <string>
 
 // Public
+void GolBoard::readInputProt()
+{
+    StdBoardBits::StillLife stillLife;
+    StdBoardBits::Spaceships spaceships;
+    StdBoardBits::Oscillators oscillators;
+    StdBoardBits::Methuselahs methuselas;
+    StdBoardBits::InfiniteGrowth infGrowth;
+    StdBoardBits::GliderGun guns;
+
+    // reads from StdBoardBits library to create a board
+    BoardBit bit = stillLife.block();
+    int buffer = 2; 
+
+    // setup board size based on minx of input + buffer
+    maxX = buffer*2 + bit.minx;
+    maxY = buffer*2 + bit.miny;
+
+    // fix the index and resize board
+    bit.fixPosIndex( buffer, maxX, &bit.bitPosLiveList );
+    board.resize( maxX*maxY );
+
+    for( auto it = bit.bitPosLiveList.begin(); it != bit.bitPosLiveList.end(); it++ )
+    {
+        board[it->index].live = true;
+    }
+
+    alive.insert( alive.end(), bit.bitPosLiveList.begin(), bit.bitPosLiveList.end() );
+}
+
 void GolBoard::readInput()
 {
     // Takes a file in and reads the input into game board
@@ -105,7 +136,7 @@ int GolBoard::getIndex( int x, int y )
 
 // Searches through list of alive cells, checking the dead neighbors along the way to see if they will
 // come to life. Only will check each cell once
-void GolBoard::checkNeighbors( BoardPos pos, bool enable )
+void GolBoard::checkNeighbors( BoardPosList pos, bool enable )
 {
     Cell *cut;
     int liveCount = 0;
@@ -115,7 +146,7 @@ void GolBoard::checkNeighbors( BoardPos pos, bool enable )
         int cutIndex = it->index;
         int i = it->posY;
         int j = it->posX;
-        BoardPos deadPos;
+        BoardPosList deadPos;
         cut = &board[cutIndex];
 
         for( int k = -1; k < 2; k++ )

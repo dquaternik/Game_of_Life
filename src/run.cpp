@@ -7,7 +7,7 @@ int main()
 
     GolBoard golBoard;
 
-    golBoard.readInput();
+    golBoard.readInputProt();
     golBoard.printOutput();
 
     while(1)

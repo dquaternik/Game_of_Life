@@ -9,19 +9,20 @@ class GolBoard
 {
 private:
     Board board;
-    BoardPos alive;
-    BoardPos nextAlive;
+    BoardPosList alive;
+    BoardPosList nextAlive;
     unsigned int maxX;
     unsigned int maxY;
 
 public:
     void readInput();
+    void readInputProt();
     void updateBoard();
     void printOutput();
 
 private:
     int getIndex( int x, int y );
-    void checkNeighbors( BoardPos pos, bool enable );
+    void checkNeighbors( BoardPosList pos, bool enable );
     void updateCells();
 };
 

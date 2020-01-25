@@ -41,6 +41,6 @@ public:
 };
 
 typedef std::vector< Cell > Board;
-typedef std::vector< CellPos > BoardPos;
+typedef std::vector< CellPos > BoardPosList;
 
 #endif
