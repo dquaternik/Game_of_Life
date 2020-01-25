@@ -80,21 +80,21 @@ void GolBoard::updateBoard()
                     else truej = j+l;
 
                     index = getIndex( truej, truei );
-                    if( board[index].isLive() && cut != &board[index] ) liveCount++;
+                    if( board[index].live && cut != &board[index] ) liveCount++;
                 }
             }
 
             if( liveCount == 3 )
             {
-                board[cutIndex].nextUpdate( true );
+                board[cutIndex].nextLive = true;
             }
             else if( liveCount < 2 || liveCount > 3 )
             {
-                board[cutIndex].nextUpdate( false );
+                board[cutIndex].nextLive = false;
             }
             else
             {
-                board[cutIndex].nextUpdate(board[cutIndex].isLive());
+                board[cutIndex].nextLive = board[cutIndex].live;
             }
             
 
