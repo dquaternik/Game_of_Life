@@ -40,7 +40,7 @@ void GolBoard::readInput()
             {
                 Cell extra(true);
                 board.push_back(extra);
-                AlivePos extraPos( xcount, ycount, getIndex( xcount, ycount ) );
+                CellPos extraPos( xcount, ycount, getIndex( xcount, ycount ) );
                 alive.push_back( extraPos );
             }
             xcount++;
@@ -62,6 +62,7 @@ void GolBoard::updateBoard()
         for(int j = 0; j < maxX; j++ )
         {
             int cutIndex = getIndex( j, i );
+            std::vector< CellPos > deadPos;
             cut = &board[cutIndex];
 
             for( int k = -1; k < 2; k++ )
