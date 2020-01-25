@@ -1,4 +1,4 @@
-#include "boardBits.hpp"
+#include "StdBoardBits.hpp"
 #include "gol.hpp"
 
 #include <iostream>
@@ -105,7 +105,7 @@ int GolBoard::getIndex( int x, int y )
 
 // Searches through list of alive cells, checking the dead neighbors along the way to see if they will
 // come to life. Only will check each cell once
-void GolBoard::checkNeighbors( std::vector< CellPos > pos, bool enable )
+void GolBoard::checkNeighbors( BoardPos pos, bool enable )
 {
     Cell *cut;
     int liveCount = 0;
@@ -115,7 +115,7 @@ void GolBoard::checkNeighbors( std::vector< CellPos > pos, bool enable )
         int cutIndex = it->index;
         int i = it->posY;
         int j = it->posX;
-        std::vector< CellPos > deadPos;
+        BoardPos deadPos;
         cut = &board[cutIndex];
 
         for( int k = -1; k < 2; k++ )

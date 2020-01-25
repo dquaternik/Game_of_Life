@@ -1,6 +1,8 @@
 #ifndef h_CELLS_h
 #define h_CELLS_h
 
+#include <vector>
+
 class Cell
 {
 public:
@@ -37,5 +39,8 @@ public:
     int posY;
     int index;
 };
+
+typedef std::vector< Cell > Board;
+typedef std::vector< CellPos > BoardPos;
 
 #endif

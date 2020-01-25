@@ -8,9 +8,9 @@
 class GolBoard
 {
 private:
-    std::vector< Cell > board;
-    std::vector< CellPos > alive;
-    std::vector< CellPos > nextAlive;
+    Board board;
+    BoardPos alive;
+    BoardPos nextAlive;
     unsigned int maxX;
     unsigned int maxY;
 
@@ -21,7 +21,7 @@ public:
 
 private:
     int getIndex( int x, int y );
-    void checkNeighbors( std::vector< CellPos > pos, bool enable );
+    void checkNeighbors( BoardPos pos, bool enable );
     void updateCells();
 };
 
