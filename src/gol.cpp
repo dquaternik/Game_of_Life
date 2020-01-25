@@ -35,6 +35,7 @@ void GolBoard::readInput()
             {
                 Cell extra(false);
                 board.push_back(extra);
+                xcount++;
             } 
             else if( *i == 'x' )
             {
@@ -42,12 +43,17 @@ void GolBoard::readInput()
                 board.push_back(extra);
                 CellPos extraPos( xcount, ycount, getIndex( xcount, ycount ) );
                 alive.push_back( extraPos );
+                xcount++;
             }
-            xcount++;
         }
-        if( xcount > maxX ) maxX = xcount/2;
+        if( xcount > maxX ) maxX = xcount;
         xcount = 0;
         ycount++;
+    }
+
+    for( auto it = alive.begin(); it != alive.end(); ++it )
+    {
+        it->index = getIndex( it->posX, it->posY );
     }
     maxY = ycount;
 }
