@@ -26,3 +26,6 @@ add_executable(GameOfLife ${SOURCES})
 #add input file
 configure_file(${INPUT}
                ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+#set cmake build type
+set(CMAKE_BUILD_TYPE Debug)
