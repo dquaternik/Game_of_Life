@@ -110,6 +110,10 @@ void GolBoard::updateCells()
     {
         i->update();
     }
+
+    alive.clear();
+    alive = nextAlive;
+    nextAlive.clear();
 }
 
 void GolBoard::printOutput()
@@ -117,7 +121,7 @@ void GolBoard::printOutput()
     int count = 0;
     for( auto i = board.begin(); i != board.end(); i++ )
     {
-        if( i->isLive() ) std::cout << "x ";
+        if( i->live ) std::cout << "x ";
         else std::cout << ". ";
         count++;
         if( count == maxX )
@@ -129,4 +133,71 @@ void GolBoard::printOutput()
     }
     std::cout << std::endl;
 
+}
+
+void GolBoard::checkNeighbors( std::vector< CellPos > pos, bool enable )
+{
+    Cell *cut;
+    int liveCount = 0;
+
+    for(auto it = pos.begin(); it != pos.end(); it++ )
+    {
+        int cutIndex = it->index;
+        int i = it->posY;
+        int j = it->posX;
+        std::vector< CellPos > deadPos;
+        cut = &board[cutIndex];
+
+        for( int k = -1; k < 2; k++ )
+        {
+            for( int l = -1; l < 2; l++ )
+            {
+
+                int index, truei, truej; 
+                if( i == 0 && k == -1 ) truei = maxY-1;
+                else if( i == maxY-1 && k == 1) truei = 0;
+                else truei = i+k;
+
+                if( j == 0 && l == -1 ) truej = maxX-1;
+                else if( j == maxX-1 && l == 1) truej = 0;
+                else truej = j+l;
+
+                index = getIndex( truej, truei );
+                if( board[index].live && cut != &board[index] ) liveCount++;
+                else if( enable && !board[index].live && cut != &board[index] && !board[index].checked )
+                {
+                    board[index].checked = true;
+                    CellPos extraPos( truej, truei, index );
+                    deadPos.push_back( extraPos );
+                }
+            }
+        }
+
+        if( liveCount == 3 )
+        {
+            board[cutIndex].nextLive = true;
+            CellPos extraPos( j, i, cutIndex );
+            nextAlive.push_back( extraPos );
+        }
+        else if( liveCount < 2 || liveCount > 3 )
+        {
+            board[cutIndex].nextLive = false;
+        }
+        else
+        {
+            board[cutIndex].nextLive = board[cutIndex].live;
+            if( board[cutIndex].live )
+            {
+                CellPos extraPos( j, i, cutIndex );
+                nextAlive.push_back( extraPos );
+            }
+        }
+        liveCount = 0;
+
+        if( enable && deadPos.size() > 0 ) 
+        {
+            checkNeighbors( deadPos, false );
+            deadPos.clear();
+        }
+    }
 }

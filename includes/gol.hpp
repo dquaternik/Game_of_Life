@@ -3,26 +3,23 @@
 class Cell
 {
 public:
-    Cell( bool live = false ) : live( live ){};
+    Cell( bool live = false ) 
+        : live( live )
+        , nextLive( false ) 
+        , checked( false )
+        {};
     ~Cell(){};
-
-    void nextUpdate( bool live )
-    {
-        nextLive = live;
-    }
     
     void update()
     {
         live = nextLive;
         nextLive = false;
+        checked = false;
     }
 
-    bool isLive() { return live; }
-
-protected:
+    bool checked;
     bool live;
     bool nextLive;
-
 };
 
 class CellPos
@@ -45,6 +42,7 @@ class GolBoard
 private:
     std::vector< Cell > board;
     std::vector< CellPos > alive;
+    std::vector< CellPos > nextAlive;
     unsigned int maxX;
     unsigned int maxY;
 
@@ -56,5 +54,6 @@ public:
 
 private:
     int getIndex( int x, int y );
+    void checkNeighbors( std::vector< CellPos > pos, bool enable );
 
 };
