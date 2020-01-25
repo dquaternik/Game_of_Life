@@ -1,3 +1,4 @@
+#include "boardBits.hpp"
 #include "gol.hpp"
 
 #include <iostream>
@@ -59,6 +60,7 @@ void GolBoard::readInput()
 void GolBoard::updateBoard()
 {
     checkNeighbors( alive, true );
+    updateCells();
 }
 
 void GolBoard::updateCells()
