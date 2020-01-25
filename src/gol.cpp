@@ -18,22 +18,22 @@ void GolBoard::readInputProt()
     StdBoardBits::GliderGun guns;
 
     // reads from StdBoardBits library to create a board
-    BoardBit bit = stillLife.block();
-    int buffer = 2; 
+    BoardBit bit = stillLife.loaf();
+    int xbuffer = 2; 
+    int ybuffer = 2;
 
     // setup board size based on minx of input + buffer
-    maxX = buffer*2 + bit.minx;
-    maxY = buffer*2 + bit.miny;
+    maxX = xbuffer*2 + bit.minx;
+    maxY = ybuffer*2 + bit.miny;
 
     // fix the index and resize board
-    bit.fixPosIndex( buffer, maxX, &bit.bitPosLiveList );
-    board.resize( maxX*maxY );
+    bit.fixPosIndex( xbuffer, ybuffer, maxX, &bit.bitPosLiveList );
 
-    for( auto it = bit.bitPosLiveList.begin(); it != bit.bitPosLiveList.end(); it++ )
+    board.resize( maxX*maxY );
+    for( auto it = bit.bitPosLiveList.begin(); it != bit.bitPosLiveList.end(); ++it )
     {
         board[it->index].live = true;
     }
-
     alive.insert( alive.end(), bit.bitPosLiveList.begin(), bit.bitPosLiveList.end() );
 }
 
@@ -43,7 +43,7 @@ void GolBoard::readInput()
     std::ifstream inputfile;
     std::string output;
     inputfile.open("conwayInput.txt", std::ios::in);
-    
+
     if( !inputfile.is_open() )
     {
         std::cout << "Error bad file!" << std::endl;
@@ -96,7 +96,7 @@ void GolBoard::updateBoard()
 
 void GolBoard::updateCells()
 {
-    // iterate through board and update entirety
+// iterate through board and update entirety
     for( auto it = board.begin(); it != board.end(); it++ )
     {
         it->update();
@@ -111,9 +111,9 @@ void GolBoard::printOutput()
 {
     int count = 0;
     // iterate through the board and print to console
-    for( auto i = board.begin(); i != board.end(); i++ )
+    for( auto it = board.begin(); it != board.end(); it++ )
     {
-        if( i->live ) std::cout << "x ";
+        if( it->live ) std::cout << "x ";
         else std::cout << ". ";
         count++;
         if( count == maxX )
@@ -121,7 +121,6 @@ void GolBoard::printOutput()
             count = 0;
             std::cout << std::endl;
         }
-
     }
     std::cout << std::endl;
 
@@ -153,7 +152,6 @@ void GolBoard::checkNeighbors( BoardPosList pos, bool enable )
         {
             for( int l = -1; l < 2; l++ )
             {
-
                 int index, truei, truej; 
                 if( i == 0 && k == -1 ) truei = maxY-1;
                 else if( i == maxY-1 && k == 1) truei = 0;

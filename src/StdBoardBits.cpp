@@ -2,20 +2,21 @@
 
 #include "cells.hpp"
 
-void BoardBit::fixPosIndex( int buffer, int maxX, BoardPosList* posList )
+void BoardBit::fixPosIndex( int xbuffer, int ybuffer, int maxX, BoardPosList* posList )
 {
     for(auto it = posList->begin(); it != posList->end(); it++ )
     {
         // fix position
-        it->posX = it->posX + buffer;
-        it->posY = it->posY + buffer;
+        it->posX = it->posX + xbuffer;
+        it->posY = it->posY + ybuffer;
         it->index = it->posY*maxX + it->posX; // fix the index based on buffer
     }
 }
 
-Board StdBoardBits::setupBitBoard( BoardPosList liveList, int minx, int miny )
+Board StdBoardBits::setupBoard( BoardPosList liveList, int minx, int miny )
 {
-    Board board( minx*miny );
+    Board board;
+    board.resize( minx*miny );
 
     for( auto it = liveList.begin(); it != liveList.end(); ++it )
     {
@@ -27,19 +28,267 @@ Board StdBoardBits::setupBitBoard( BoardPosList liveList, int minx, int miny )
 
 BoardBit StdBoardBits::StillLife::block()
 {
+
+    /*
+        x x
+        x x
+    */
     StdBoardBits stdBrdBits;
-    BoardBit out( 2, 2, 4 );
+    BoardBit block( 2, 2, 4 );
 
-    CellPos one( 0, 0, 0 );
-    CellPos two( 0, 1, 1 );
-    CellPos three( 1, 0, 2 );
-    CellPos four( 1, 1, 3 );
-    out.bitPosLiveList.push_back( one );
-    out.bitPosLiveList.push_back( two );
-    out.bitPosLiveList.push_back( three );
-    out.bitPosLiveList.push_back( four );
+    block.bitPosLiveList.push_back( CellPos( 0, 0, 0 ) );
+    block.bitPosLiveList.push_back( CellPos( 0, 1, 1 ) );
+    block.bitPosLiveList.push_back( CellPos( 1, 0, 2 ) );
+    block.bitPosLiveList.push_back( CellPos( 1, 1, 3 ) );
 
-    out.bitBoard = stdBrdBits.setupBitBoard( out.bitPosLiveList, 2, 2 );
+    block.bitBoard = stdBrdBits.setupBoard( block.bitPosLiveList, 2, 2 );
 
-    return out;
+    return block;
+}
+
+BoardBit StdBoardBits::StillLife::beehive()
+{
+    /*
+        . x x .
+        x . . x
+        . x x . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit beehive( 4, 3, 12 );
+
+    beehive.bitPosLiveList.push_back( CellPos( 0, 1, 1 ) );
+    beehive.bitPosLiveList.push_back( CellPos( 1, 0, 4 ) );
+    beehive.bitPosLiveList.push_back( CellPos( 1, 2, 6 ) );
+    beehive.bitPosLiveList.push_back( CellPos( 2, 0, 7 ) );
+    beehive.bitPosLiveList.push_back( CellPos( 2, 2, 9 ) );
+    beehive.bitPosLiveList.push_back( CellPos( 3, 1, 11 ) );
+
+    beehive.bitBoard = stdBrdBits.setupBoard( beehive.bitPosLiveList, 4, 3 );
+
+    return beehive;
+}
+
+BoardBit StdBoardBits::StillLife::loaf()
+{
+    /*
+    . x x . 
+    x . . x
+    . x . x
+    . . x .
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit loaf( 4, 4, 16 );
+
+    loaf.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 2, 0, 2 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 0, 1, 4 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 3, 1, 7 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 1, 2, 9 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 3, 2, 11 ) );
+    loaf.bitPosLiveList.push_back( CellPos( 2, 3, 14 ) );
+
+    loaf.bitBoard = stdBrdBits.setupBoard( loaf.bitPosLiveList, 4, 4 );
+
+    return loaf;
+}
+
+BoardBit StdBoardBits::StillLife::boat()
+{
+    /*
+    x x . 
+    x . x 
+    . x . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit boat( 4, 4, 16 );
+
+    return boat;
+}
+
+BoardBit StdBoardBits::StillLife::tub()
+{
+    /*
+    . x . 
+    x . x 
+    . x . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit tub( 4, 4, 16 );
+
+    return tub;
+}
+
+BoardBit StdBoardBits::Oscillators::blinker()
+{
+    /*
+    . x .
+    . x . 
+    . x . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit blinker( 4, 4, 16 );
+
+    return blinker;
+}
+
+BoardBit StdBoardBits::Oscillators::toad()
+{
+    /*
+    . . x . 
+    x . . x 
+    x . . x 
+    . x . . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit toad( 4, 4, 16 );
+
+    return toad;
+}
+
+BoardBit StdBoardBits::Oscillators::beacon()
+{
+    /*
+    x x . . 
+    x . . . 
+    . . . x 
+    . . x x 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit beacon( 4, 4, 16 );
+
+    return beacon;
+
+}
+
+BoardBit StdBoardBits::Oscillators::pulsar()
+{
+    /* Needs at least one buffer
+    . . x x x . . . x x x . . 
+    . . . . . . . . . . . . . 
+    x . . . . x . x . . . . x 
+    x . . . . x . x . . . . x  
+    x . . . . x . x . . . . x
+    . . x x x . . . x x x . .
+    . . . . . . . . . . . . . 
+    . . x x x . . . x x x . .
+    x . . . . x . x . . . . x 
+    x . . . . x . x . . . . x  
+    x . . . . x . x . . . . x
+    . . . . . . . . . . . . . 
+    . . x x x . . . x x x . .
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit pulsar( 4, 4, 16 );
+
+    return pulsar;
+}
+
+BoardBit StdBoardBits::Oscillators::pentadecathalon()
+{
+    /* Lots of space needed
+    . . x . . . . x . . 
+    x x . x x x x . x x 
+    . . x . . . . x . . 
+    */
+    StdBoardBits stdBrdBits;
+    BoardBit pentadecathalon( 4, 4, 16 );
+
+    return pentadecathalon;
+    
+}
+
+BoardBit StdBoardBits::Spaceships::glider()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit glider( 4, 4, 16 );
+
+    return glider;
+}
+
+BoardBit StdBoardBits::Spaceships::lwss()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit lwss( 4, 4, 16 );
+
+    return lwss;
+}
+
+BoardBit StdBoardBits::Spaceships::mwss()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit mwss( 4, 4, 16 );
+
+    return mwss;
+}
+
+BoardBit StdBoardBits::Spaceships::hwss()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit hwss( 4, 4, 16 );
+
+    return hwss;
+}
+
+BoardBit StdBoardBits::Methuselahs::rpent()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit rpent( 4, 4, 16 );
+
+    return rpent;
+}
+
+BoardBit StdBoardBits::Methuselahs::diehard()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit diehard( 4, 4, 16 );
+
+    return diehard;
+}
+
+BoardBit StdBoardBits::Methuselahs::acorn()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit acorn( 4, 4, 16 );
+
+    return acorn;
+}
+
+BoardBit StdBoardBits::GliderGun::gosper()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit gosper( 4, 4, 16 );
+
+    return gosper;
+}
+
+BoardBit StdBoardBits::GliderGun::simkin()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit simkin( 4, 4, 16 );
+
+    return simkin;
+}
+
+BoardBit StdBoardBits::InfiniteGrowth::ten_cell()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit ten_cell( 4, 4, 16 );
+
+    return ten_cell;
+}
+
+BoardBit StdBoardBits::InfiniteGrowth::five_by_five()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit five_by_five( 4, 4, 16 );
+
+    return five_by_five;
+}
+
+BoardBit StdBoardBits::InfiniteGrowth::one_high()
+{
+    StdBoardBits stdBrdBits;
+    BoardBit one_high( 4, 4, 16 );
+
+    return one_high;
 }

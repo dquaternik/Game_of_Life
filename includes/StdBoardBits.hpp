@@ -14,7 +14,7 @@ public:
             {};
     ~BoardBit() {};
 
-    void fixPosIndex( int buffer, int maxX, BoardPosList* posList );
+    void fixPosIndex( int xbuffer, int ybuffer, int maxX, BoardPosList* posList );
 
     Board bitBoard;
     BoardPosList bitPosLiveList;
@@ -25,18 +25,17 @@ public:
 
 class StdBoardBits
 {
+private:
+    Board setupBoard( BoardPosList liveList, int minx, int miny );
+
 public:
-
-    Board setupBitBoard( BoardPosList liveList, int minx, int miny );
-    
-
     class StillLife
     {
     public:
         BoardBit block();
         BoardBit beehive();
         BoardBit loaf();
-        BoardBit board();
+        BoardBit boat();
         BoardBit tub();
     };
 
