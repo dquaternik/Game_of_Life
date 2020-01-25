@@ -60,67 +60,7 @@ void GolBoard::readInput()
 
 void GolBoard::updateBoard()
 {
-    Cell *cut;
-    int liveCount = 0;
-
-    for(int i = 0; i < maxY; i++ )
-    {
-        for(int j = 0; j < maxX; j++ )
-        {
-            int cutIndex = getIndex( j, i );
-            std::vector< CellPos > deadPos;
-            cut = &board[cutIndex];
-
-            for( int k = -1; k < 2; k++ )
-            {
-                for( int l = -1; l < 2; l++ )
-                {
-
-                    int index, truei, truej; 
-                    if( i == 0 && k == -1 ) truei = maxY-1;
-                    else if( i == maxY-1 && k == 1) truei = 0;
-                    else truei = i+k;
-
-                    if( j == 0 && l == -1 ) truej = maxX-1;
-                    else if( j == maxX-1 && l == 1) truej = 0;
-                    else truej = j+l;
-
-                    index = getIndex( truej, truei );
-                    if( board[index].live && cut != &board[index] )
-                    {
-                        liveCount++;
-                    } 
-                    else if( !board[index].live && cut != &board[index] && !board[index].checked )
-                    {
-                        board[index].checked = true;
-                        CellPos extraPos( truej, truei, index );
-                        deadPos.push_back( extraPos );
-                    }
-                }
-            }
-
-            if( liveCount == 3 )
-            {
-                board[cutIndex].nextLive = true;
-            }
-            else if( liveCount < 2 || liveCount > 3 )
-            {
-                board[cutIndex].nextLive = false;
-            }
-            else
-            {
-                board[cutIndex].nextLive = board[cutIndex].live;
-            }
-
-            liveCount = 0;
-
-            if( deadPos.size() > 0 ) 
-            {
-                checkNeighbors( deadPos, false );
-                deadPos.clear();
-            }
-        }
-    }
+    checkNeighbors( alive, true );
 }
 
 void GolBoard::updateCells()
