@@ -80,7 +80,16 @@ void GolBoard::updateBoard()
                     else truej = j+l;
 
                     index = getIndex( truej, truei );
-                    if( board[index].live && cut != &board[index] ) liveCount++;
+                    if( board[index].live && cut != &board[index] )
+                    {
+                        liveCount++;
+                    } 
+                    else if( !board[index].live && cut != &board[index] && !board[index].checked )
+                    {
+                        board[index].checked = true;
+                        CellPos extraPos( truej, truei, index );
+                        deadPos.push_back( extraPos );
+                    }
                 }
             }
 
@@ -96,10 +105,14 @@ void GolBoard::updateBoard()
             {
                 board[cutIndex].nextLive = board[cutIndex].live;
             }
-            
 
             liveCount = 0;
 
+            if( deadPos.size() > 0 ) 
+            {
+                checkNeighbors( deadPos, false );
+                deadPos.clear();
+            }
         }
     }
 }
