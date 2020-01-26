@@ -3,6 +3,8 @@
 
 #include "cells.hpp"
 
+#include <string> 
+
 class BoardBit
 {
 public:
@@ -26,7 +28,8 @@ public:
 class StdBoardBits
 {
 private:
-    Board setupBoard( BoardPosList liveList, int minx, int miny );
+    void setupBoard( std::string input, BoardBit* out, int xmin, int ymin );
+    int getPos( int index, int xmin ) { return ( index - (index%xmin) ) / xmin; };
 
 public:
     class StillLife

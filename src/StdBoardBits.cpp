@@ -2,6 +2,8 @@
 
 #include "cells.hpp"
 
+#include <string>
+
 void BoardBit::fixPosIndex( int xbuffer, int ybuffer, int maxX, BoardPosList* posList )
 {
     for(auto it = posList->begin(); it != posList->end(); it++ )
@@ -13,38 +15,43 @@ void BoardBit::fixPosIndex( int xbuffer, int ybuffer, int maxX, BoardPosList* po
     }
 }
 
-Board StdBoardBits::setupBoard( BoardPosList liveList, int minx, int miny )
-{
-    Board board;
-    board.resize( minx*miny );
+void StdBoardBits::setupBoard( std::string input, BoardBit* out, int xmin, int ymin )
+{   
+    out->bitBoard.resize( xmin*ymin );
+    int count = 0;
 
-    for( auto it = liveList.begin(); it != liveList.end(); ++it )
+    for( std::string::iterator it = input.begin(); it != input.end(); ++it )
     {
-        board[it->index].live = true;
-    }
+        if( *it == 'x')
+        {
+            out->bitBoard[count].live = true;
+            out->bitPosLiveList.push_back( CellPos( count%xmin, getPos(count, xmin), count ) );
 
-    return board;
+            count++;
+        }
+        else if( *it == '.' )
+        {
+            out->bitBoard[count].live = false;
+            count++;
+        }
+    }
 }
 
 BoardBit StdBoardBits::StillLife::block()
 {
-
     /*
-        x x
-        x x
+    x x 
+    x x 
     */
+    std::string input = "x x x x";
     StdBoardBits stdBrdBits;
-    BoardBit block( 2, 2, 4 );
+    BoardBit out( 2, 2, 4 );
 
-    block.bitPosLiveList.push_back( CellPos( 0, 0, 0 ) );
-    block.bitPosLiveList.push_back( CellPos( 0, 1, 1 ) );
-    block.bitPosLiveList.push_back( CellPos( 1, 0, 2 ) );
-    block.bitPosLiveList.push_back( CellPos( 1, 1, 3 ) );
+    stdBrdBits.setupBoard( input, &out, 2, 2 );
 
-    block.bitBoard = stdBrdBits.setupBoard( block.bitPosLiveList, 2, 2 );
-
-    return block;
+    return out;
 }
+
 
 BoardBit StdBoardBits::StillLife::beehive()
 {
@@ -53,19 +60,13 @@ BoardBit StdBoardBits::StillLife::beehive()
         x . . x
         . x x . 
     */
+    std::string input = ". x x . x . . x . x x .";
     StdBoardBits stdBrdBits;
-    BoardBit beehive( 4, 3, 12 );
+    BoardBit out( 4, 3, 12 );
 
-    beehive.bitPosLiveList.push_back( CellPos( 0, 1, 1 ) );
-    beehive.bitPosLiveList.push_back( CellPos( 1, 0, 4 ) );
-    beehive.bitPosLiveList.push_back( CellPos( 1, 2, 6 ) );
-    beehive.bitPosLiveList.push_back( CellPos( 2, 0, 7 ) );
-    beehive.bitPosLiveList.push_back( CellPos( 2, 2, 9 ) );
-    beehive.bitPosLiveList.push_back( CellPos( 3, 1, 11 ) );
+    stdBrdBits.setupBoard( input, &out, 4, 3 );
 
-    beehive.bitBoard = stdBrdBits.setupBoard( beehive.bitPosLiveList, 4, 3 );
-
-    return beehive;
+    return out;
 }
 
 BoardBit StdBoardBits::StillLife::loaf()
@@ -76,20 +77,13 @@ BoardBit StdBoardBits::StillLife::loaf()
     . x . x
     . . x .
     */
+    std::string input = ". x x . x . . x . x . x . . x .";
     StdBoardBits stdBrdBits;
-    BoardBit loaf( 4, 4, 16 );
+    BoardBit out( 4, 4, 16 );
 
-    loaf.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 2, 0, 2 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 0, 1, 4 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 3, 1, 7 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 1, 2, 9 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 3, 2, 11 ) );
-    loaf.bitPosLiveList.push_back( CellPos( 2, 3, 14 ) );
+    stdBrdBits.setupBoard( input, &out, 4, 4 );
 
-    loaf.bitBoard = stdBrdBits.setupBoard( loaf.bitPosLiveList, 4, 4 );
-
-    return loaf;
+    return out;
 }
 
 BoardBit StdBoardBits::StillLife::boat()
@@ -99,18 +93,13 @@ BoardBit StdBoardBits::StillLife::boat()
     x . x 
     . x . 
     */
+    std::string input = "x x . x . x . x . ";
     StdBoardBits stdBrdBits;
-    BoardBit boat( 3, 3, 9 );
+    BoardBit out( 3, 3, 9 );
 
-    boat.bitPosLiveList.push_back( CellPos( 0, 0, 0 ) );
-    boat.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
-    boat.bitPosLiveList.push_back( CellPos( 0, 1, 3 ) );
-    boat.bitPosLiveList.push_back( CellPos( 2, 1, 5 ) );
-    boat.bitPosLiveList.push_back( CellPos( 1, 2, 7 ) );
+    stdBrdBits.setupBoard( input, &out, 3, 3 );
 
-    boat.bitBoard = stdBrdBits.setupBoard( boat.bitPosLiveList, 3, 3 );
-
-    return boat;
+    return out;
 }
 
 BoardBit StdBoardBits::StillLife::tub()
@@ -120,17 +109,13 @@ BoardBit StdBoardBits::StillLife::tub()
     x . x 
     . x . 
     */
+    std::string input = ". x . x . x . x . ";
     StdBoardBits stdBrdBits;
-    BoardBit tub( 3, 3, 9 );
+    BoardBit out( 3, 3, 9 );
 
-    tub.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
-    tub.bitPosLiveList.push_back( CellPos( 0, 1, 3 ) );
-    tub.bitPosLiveList.push_back( CellPos( 2, 1, 5 ) );
-    tub.bitPosLiveList.push_back( CellPos( 1, 2, 7 ) );
+    stdBrdBits.setupBoard( input, &out, 3, 3 );
 
-    tub.bitBoard = stdBrdBits.setupBoard( tub.bitPosLiveList, 3, 3 );
-
-    return tub;
+    return out;
 }
 
 BoardBit StdBoardBits::Oscillators::blinker()
@@ -140,16 +125,13 @@ BoardBit StdBoardBits::Oscillators::blinker()
     . x . 
     . x . 
     */
+    std::string input = ". x . . x . . x . ";    
     StdBoardBits stdBrdBits;
-    BoardBit blinker( 3, 3, 9 );
+    BoardBit out( 3, 3, 9 );
 
-    blinker.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
-    blinker.bitPosLiveList.push_back( CellPos( 1, 1, 4 ) );
-    blinker.bitPosLiveList.push_back( CellPos( 1, 2, 7 ) );
+    stdBrdBits.setupBoard( input, &out, 3, 3 );
 
-    blinker.bitBoard = stdBrdBits.setupBoard( blinker.bitPosLiveList, 3, 3 );
-
-    return blinker;
+    return out;
 }
 
 BoardBit StdBoardBits::Oscillators::toad()
@@ -160,19 +142,13 @@ BoardBit StdBoardBits::Oscillators::toad()
     x . . x 
     . x . . 
     */
+    std::string input = ". . x . x . . x x . . x . x . . ";    
     StdBoardBits stdBrdBits;
-    BoardBit toad( 4, 4, 16 );
+    BoardBit out( 4, 4, 16 );
 
-    toad.bitPosLiveList.push_back( CellPos( 2, 0, 2 ) );
-    toad.bitPosLiveList.push_back( CellPos( 0, 1, 4 ) );
-    toad.bitPosLiveList.push_back( CellPos( 3, 1, 7 ) );
-    toad.bitPosLiveList.push_back( CellPos( 0, 2, 8 ) );
-    toad.bitPosLiveList.push_back( CellPos( 3, 2, 11 ) );
-    toad.bitPosLiveList.push_back( CellPos( 1, 3, 13 ) );
+    stdBrdBits.setupBoard( input, &out, 4, 4 );
 
-    toad.bitBoard = stdBrdBits.setupBoard( toad.bitPosLiveList, 4, 4 );
-
-    return toad;
+    return out;
 }
 
 BoardBit StdBoardBits::Oscillators::beacon()
@@ -183,19 +159,13 @@ BoardBit StdBoardBits::Oscillators::beacon()
     . . . x 
     . . x x 
     */
+    std::string input = "x x . . x . . . . . . x . . x x ";
     StdBoardBits stdBrdBits;
-    BoardBit beacon( 4, 4, 16 );
+    BoardBit out( 4, 4, 16 );
 
-    beacon.bitPosLiveList.push_back( CellPos( 0, 0, 0 ) );
-    beacon.bitPosLiveList.push_back( CellPos( 1, 0, 1 ) );
-    beacon.bitPosLiveList.push_back( CellPos( 0, 1, 4 ) );
-    beacon.bitPosLiveList.push_back( CellPos( 3, 2, 11 ) );
-    beacon.bitPosLiveList.push_back( CellPos( 2, 3, 14 ) );
-    beacon.bitPosLiveList.push_back( CellPos( 3, 3, 15 ) );
+    stdBrdBits.setupBoard( input, &out, 4, 4 );
 
-    beacon.bitBoard = stdBrdBits.setupBoard( beacon.bitPosLiveList, 4, 4 );
-
-    return beacon;
+    return out;
 
 }
 
@@ -218,68 +188,13 @@ BoardBit StdBoardBits::Oscillators::pulsar()
   1  . . . . . . . . . . . . . 
   2  . . x x x . . . x x x . .
     */
+    std::string input = ". . x x x . . . x x x . . . . . . . . . . . . . . . x . . . . x . x . . . . x x . . . . x . x . . . . x x . . . . x . x . . . . x . . x x x . . . x x x . . . . . . . . . . . . . . . . . x x x . . . x x x . . x . . . . x . x . . . . x x . . . . x . x . . . . x x . . . . x . x . . . . x . . . . . . . . . . . . . . . x x x . . . x x x . . ";
     StdBoardBits stdBrdBits;
-    BoardBit pulsar( 13, 13, 169 );
+    BoardBit out( 13, 13, 169 ); 
 
-    // upper left
-    pulsar.bitPosLiveList.push_back( CellPos( 2, 0, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 3, 0, 3 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 4, 0, 4 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 2, 26 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 2, 31 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 3, 39 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 3, 44 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 4, 52 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 4, 57 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 2, 5, 67 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 3, 5, 68 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 4, 5, 69 ) );
+    stdBrdBits.setupBoard( input, &out, 13, 13 );
 
-    // upper right
-    pulsar.bitPosLiveList.push_back( CellPos( 8, 0, 8 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 9, 0, 9 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 10, 0, 10 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 2, 33 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 2, 38 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 3, 46 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 3, 51 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 4, 59 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 4, 64 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 8, 5, 73 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 9, 5, 74 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 10, 5, 75 ) );
-
-    // lower left
-    pulsar.bitPosLiveList.push_back( CellPos( 2, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 3, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 4, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 9, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 9, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 10, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 10, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 0, 11, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 5, 11, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 2, 12, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 3, 12, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 4, 12, 2 ) );
-
-    // lower right
-    pulsar.bitPosLiveList.push_back( CellPos( 8, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 9, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 10, 7, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 9, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 9, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 10, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 10, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 7, 11, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 12, 11, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 8, 12, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 9, 12, 2 ) );
-    pulsar.bitPosLiveList.push_back( CellPos( 10, 12, 2 ) );   
-
-    pulsar.bitBoard = stdBrdBits.setupBoard( pulsar.bitPosLiveList, 13, 13 );
-
-    return pulsar;
+    return out;
 }
 
 BoardBit StdBoardBits::Oscillators::pentadecathalon()
@@ -289,120 +204,238 @@ BoardBit StdBoardBits::Oscillators::pentadecathalon()
     x x . x x x x . x x 
     . . x . . . . x . . 
     */
+    std::string input = ". . x . . . . x . . x x . x x x x . x x . . x . . . . x . . ";
     StdBoardBits stdBrdBits;
-    BoardBit pentadecathalon( 10, 3, 30 );
+    BoardBit out( 10, 3, 30 );
 
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 2, 0, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 7, 0, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 0, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 1, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 3, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 4, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 5, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 6, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 8, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 9, 1, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 2, 2, 2 ) );
-    pentadecathalon.bitPosLiveList.push_back( CellPos( 7, 2, 2 ) );
+    stdBrdBits.setupBoard( input, &out, 10, 3 );
 
-    pentadecathalon.bitBoard = stdBrdBits.setupBoard( pentadecathalon.bitPosLiveList, 10, 3 );
-
-    return pentadecathalon;
+    return out;
     
 }
 
 BoardBit StdBoardBits::Spaceships::glider()
 {
+    /*
+    . . x
+    x . x
+    . x x
+    */
+    std::string input = ". . x x . x . x x";
     StdBoardBits stdBrdBits;
-    BoardBit glider( 4, 4, 16 );
+    BoardBit out( 3, 3, 9 );
+    
+    stdBrdBits.setupBoard( input, &out, 3, 3 );
 
-    return glider;
+    return out;
 }
 
 BoardBit StdBoardBits::Spaceships::lwss()
 {
+    /*
+    . x . . x 
+    x . . . . 
+    x . . . x
+    x x x x . 
+    */
+    std::string input = ". x . . x x . . . . x . . . x x x x x . ";    
     StdBoardBits stdBrdBits;
-    BoardBit lwss( 4, 4, 16 );
+    BoardBit out( 5, 4, 20 );
 
-    return lwss;
+    stdBrdBits.setupBoard( input, &out, 5, 4 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::Spaceships::mwss()
 {
+    /*
+    . . . x . . 
+    . x . . . x 
+    x . . . . . 
+    x . . . . x 
+    x x x x x . 
+    */
+    std::string input = ". . . x . . . x . . . x x . . . . . x . . . . x x x x x x . ";
     StdBoardBits stdBrdBits;
-    BoardBit mwss( 4, 4, 16 );
+    BoardBit out( 6, 5, 30 );
 
-    return mwss;
+    stdBrdBits.setupBoard( input, &out, 6, 5 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::Spaceships::hwss()
 {
+    /*
+    . . . x x . . 
+    . x . . . . x
+    x . . . . . . 
+    x . . . . . x 
+    x x x x x x . 
+    */
+    std::string input = ". . . x x . . . x . . . . x x . . . . . . x . . . . . x x x x x x x . ";
     StdBoardBits stdBrdBits;
-    BoardBit hwss( 4, 4, 16 );
+    BoardBit out( 7, 5, 35 );
 
-    return hwss;
+    stdBrdBits.setupBoard( input, &out, 7, 5 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::Methuselahs::rpent()
 {
+    /*
+    . x x 
+    x x . 
+    . x . 
+    */
+    std::string input = ". x x x x . . x . ";
     StdBoardBits stdBrdBits;
-    BoardBit rpent( 4, 4, 16 );
+    BoardBit out( 3, 3, 9 );
 
-    return rpent;
+    stdBrdBits.setupBoard( input, &out, 3, 3 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::Methuselahs::diehard()
 {
+    /*
+    . . . . . . x . 
+    x x . . . . . . 
+    . x . . . x x x 
+    */
+    std::string input = ". . . . . . x . x x . . . . . . . x . . . x x x ";
     StdBoardBits stdBrdBits;
-    BoardBit diehard( 4, 4, 16 );
+    BoardBit out( 8, 3, 24 );
 
-    return diehard;
+    stdBrdBits.setupBoard( input, &out, 8, 3 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::Methuselahs::acorn()
 {
+    /*
+    . x . . . . . 
+    . . . x . . . 
+    x x . . x x x 
+    */
+    std::string input = ". x . . . . . . . . x . . . x x . . x x x ";
     StdBoardBits stdBrdBits;
-    BoardBit acorn( 4, 4, 16 );
+    BoardBit out( 7, 3, 21 );
 
-    return acorn;
+    stdBrdBits.setupBoard( input, &out, 7, 3 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::GliderGun::gosper()
 {
+    /*
+     x
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+y0  . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . 
+ 1  . . . . . . . . . . . . . . . . . . . . . . . x . x . . . . . . . . . . . 
+ 2  . . . . . . . . . . . . . x x . . . . . . x x . . . . . . . . . . . x x . 
+ 3  . . . . . . . . . . . . x . . . x . . . . x x . . . . . . . . . . . x x . 
+ 4  . x x . . . . . . . . x . . . . . x . . . x x . . . . . . . . . . . . . . 
+ 5  . x x . . . . . . . . x . . . x . x x . . . . x . x . . . . . . . . . . . 
+ 6  . . . . . . . . . . . x . . . . . x . . . . . . . x . . . . . . . . . . . 
+ 7  . . . . . . . . . . . . x . . . x . . . . . . . . . . . . . . . . . . . . 
+ 8  . . . . . . . . . . . . . x x . . . . . . . . . . . . . . . . . . . . . . 
+    */
+    std::string input = ". . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x . x . . . . . . . . . . . . . . . . . . . . . . . . x x . . . . . . x x . . . . . . . . . . . x x . . . . . . . . . . . . . x . . . x . . . . x x . . . . . . . . . . . x x . . x x . . . . . . . . x . . . . . x . . . x x . . . . . . . . . . . . . . . x x . . . . . . . . x . . . x . x x . . . . x . x . . . . . . . . . . . . . . . . . . . . . . x . . . . . x . . . . . . . x . . . . . . . . . . . . . . . . . . . . . . . x . . . x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x x . . . . . . . . . . . . . . . . . . . . . . ";
     StdBoardBits stdBrdBits;
-    BoardBit gosper( 4, 4, 16 );
+    BoardBit out( 37, 8, 296 );
 
-    return gosper;
+    stdBrdBits.setupBoard( input, &out, 37, 8 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::GliderGun::simkin()
 {
+    /*
+     x
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
+y0   . x x . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . .
+ 1   . x x . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 2   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 3   . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . .  
+ 4   . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 5   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 6   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 7   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 8   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+ 9   . . . . . . . . . . . . . . . . . . . . . . . x x . x x . . . . . . . 
+10   . . . . . . . . . . . . . . . . . . . . . . x . . . . . x . . . . . .  
+11   . . . . . . . . . . . . . . . . . . . . . . x . . . . . . x . . x x .
+12   . . . . . . . . . . . . . . . . . . . . . . x x x . . . x . . . x x .
+13   . . . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . .
+14   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+15   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+16   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+17   . . . . . . . . . . . . . . . . . . . . . x x . . . . . . . . . . . .
+18   . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . . . 
+19   . . . . . . . . . . . . . . . . . . . . . . x x x . . . . . . . . . . 
+20   . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . .
+    */
+    std::string input = ". x x . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . .. x x . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . .  . . . . . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x x . x x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . x . . . . . .  . . . . . . . . . . . . . . . . . . . . . . x . . . . . . x . . x x .. . . . . . . . . . . . . . . . . . . . . . x x x . . . x . . . x x .. . . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x x . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x x x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . ";
     StdBoardBits stdBrdBits;
-    BoardBit simkin( 4, 4, 16 );
+    BoardBit out( 35, 20, 700 );
 
-    return simkin;
+    stdBrdBits.setupBoard( input, &out, 35, 20 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::InfiniteGrowth::ten_cell()
 {
+    /*
+    . . . . . . x . 
+    . . . . x . x x 
+    . . . . x . x . 
+    . . . . x . . . 
+    . . . x . . . . 
+    . x . x . . . . 
+    */
+    std::string input = ". . . . . . x . . . . . x . x x . . . . x . x . . . . . x . . . . . . x . . . . . x . x . . . . ";
     StdBoardBits stdBrdBits;
-    BoardBit ten_cell( 4, 4, 16 );
+    BoardBit out( 8, 6, 48 );
 
-    return ten_cell;
+    stdBrdBits.setupBoard( input, &out, 8, 6 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::InfiniteGrowth::five_by_five()
 {
+    /*
+    x x x . x 
+    x . . . . 
+    . . . x x 
+    . x x . x 
+    x . x . x 
+    */
+    std::string input = "x x x . x x . . . . . . . x x . x x . x x . x . x ";
     StdBoardBits stdBrdBits;
-    BoardBit five_by_five( 4, 4, 16 );
+    BoardBit out( 5, 5, 25 );
 
-    return five_by_five;
+    stdBrdBits.setupBoard( input, &out, 5, 5 );
+
+    return out;
 }
 
 BoardBit StdBoardBits::InfiniteGrowth::one_high()
 {
+    // x x x x x x x . x x x x x . . . x x x . . . . . . x x x x x x x . x x x x x 
+    std::string input = "x x x x x x x . x x x x x . . . x x x . . . . . . x x x x x x x . x x x x x ";
     StdBoardBits stdBrdBits;
-    BoardBit one_high( 4, 4, 16 );
+    BoardBit out( 39, 1, 39 );
 
-    return one_high;
+    stdBrdBits.setupBoard( input, &out, 39, 1 );
+
+    return out;
 }

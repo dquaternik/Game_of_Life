@@ -18,7 +18,7 @@ void GolBoard::readInputProt()
     StdBoardBits::GliderGun guns;
 
     // reads from StdBoardBits library to create a board
-    BoardBit bit = stillLife.loaf();
+    BoardBit bit = stillLife.beehive();
     int xbuffer = 2; 
     int ybuffer = 2;
 
