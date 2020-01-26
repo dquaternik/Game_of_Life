@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 #set project name and number
-project(GameOfLife VERSION 1.0)
+project(GameOfLife VERSION 1.5)
 
 #set C++ version
 set(CMAKE_CXX_STANDARD 11)

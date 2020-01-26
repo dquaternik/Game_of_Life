@@ -13,7 +13,6 @@ int main()
     while(1)
     {
         golBoard.updateBoard();
-        golBoard.updateCells();
         golBoard.printOutput();
         std::chrono::milliseconds dura(300);
         std::this_thread::sleep_for( dura );
